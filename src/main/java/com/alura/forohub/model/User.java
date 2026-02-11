@@ -1,4 +1,4 @@
-package com.andromeda.forohub.model;
+package com.alura.forohub.model;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -11,19 +11,35 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
-@Setter
+@NoArgsConstructor
 @EqualsAndHashCode(of = "id")
 public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false, length = 100)
     private String name;
+
+    @Column(nullable = false, unique = true, length = 150)
     private String email;
+
+    @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false)
+    private Boolean active = true;
+
+    public User(String name, String email, String password) {
+        this.name = name;
+        this.email = email;
+        this.password = password; // debe venir encriptado
+        this.active = true;
+    }
+
+    // ===== UserDetails =====
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -36,18 +52,13 @@ public class User implements UserDetails {
     }
 
     @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return active;
     }
 
     @Override
@@ -57,7 +68,12 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return active;
+    }
+
+    // Método controlado para desactivar usuario
+    public void deactivate() {
+        this.active = false;
     }
 }
 
