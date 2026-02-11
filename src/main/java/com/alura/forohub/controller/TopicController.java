@@ -1,12 +1,12 @@
 package com.alura.forohub.controller;
 
 // Importación de los DTOs
-import com.andromeda.forohub.dto.TopicRequestDTO;
-import com.andromeda.forohub.dto.TopicResponseDTO;
-import com.andromeda.forohub.dto.TopicToUpdate;
+import com.alura.forohub.dto.TopicRequestDTO;
+import com.alura.forohub.dto.TopicResponseDTO;
+import com.alura.forohub.dto.TopicToUpdate;
 
 // Servicio donde se encuentra la lógica de negocio
-import com.andromeda.forohub.service.TopicService;
+import com.alura.forohub.service.TopicService;
 
 // Validaciones automáticas
 import jakarta.validation.Valid;
