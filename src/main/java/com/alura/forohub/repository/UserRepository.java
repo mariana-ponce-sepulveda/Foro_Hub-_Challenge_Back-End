@@ -1,10 +1,23 @@
-package com.andromeda.forohub.repository;
+package com.alura.forohub.repository;
 
-import com.andromeda.forohub.model.User;
+import com.alura.forohub.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Optional;
+
+/**
+ * Repositorio para la entidad User.
+ */
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    UserDetails findByEmail(String email);
+    /**
+     * Busca un usuario por su email.
+     * Se utiliza en el proceso de autenticación.
+     */
+    Optional<User> findByEmail(String email);
+
+    /**
+     * Verifica si existe un usuario con el email indicado.
+     */
+    boolean existsByEmail(String email);
 }
