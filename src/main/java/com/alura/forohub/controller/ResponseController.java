@@ -1,11 +1,11 @@
-package com.andromeda.forohub.controller;
+package com.alura.forohub.controller;
 
 // Importación de los DTOs (objetos que transportan datos entre cliente y servidor)
-import com.andromeda.forohub.dto.RespRequestDTO;
-import com.andromeda.forohub.dto.RespResponseDTO;
+import com.alura.forohub.dto.RespRequestDTO;
+import com.alura.forohub.dto.RespResponseDTO;
 
 // Servicio donde vive la lógica de negocio
-import com.andromeda.forohub.service.ResponseService;
+import com.alura.forohub.service.ResponseService;
 
 // Permite validar automáticamente el cuerpo de la petición
 import jakarta.validation.Valid;
