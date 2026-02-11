@@ -1,16 +1,17 @@
-package com.andromeda.forohub.infra.security;
+package com.alura.forohub.infra.security;
 
-import com.andromeda.forohub.model.User;
+import com.alura.forohub.model.User;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+/**
+ * Controlador encargado del proceso de autenticación.
+ * Recibe credenciales y devuelve un JWT si son válidas.
+ */
 @RestController
 @RequestMapping("/login")
 public class AuthenticationController {
@@ -18,18 +19,45 @@ public class AuthenticationController {
     private final AuthenticationManager authenticationManager;
     private final TokenService tokenService;
 
-    public AuthenticationController(AuthenticationManager authenticationManager, TokenService tokenService) {
+    public AuthenticationController(AuthenticationManager authenticationManager,
+                                    TokenService tokenService) {
         this.authenticationManager = authenticationManager;
         this.tokenService = tokenService;
     }
 
+    /**
+     * Autentica un usuario y genera un token JWT.
+     *
+     * @param user datos de autenticación (email y password)
+     * @return JWT generado
+     */
     @PostMapping
-    public ResponseEntity authenticationUser(@RequestBody @Valid UserAuthentication user){
-        Authentication authToken = new UsernamePasswordAuthenticationToken(user.email(), user.password());
-        var usuarioAuthenticated = authenticationManager.authenticate(authToken);
-        var JWTtoken = tokenService.generateToken((User) usuarioAuthenticated.getPrincipal());
-        return ResponseEntity.ok(new DataJWTToken(JWTtoken));
+    public ResponseEntity<DataJWTToken> authenticateUser(
+            @RequestBody @Valid UserAuthentication user) {
+
+        // Token de autenticación con credenciales
+        Authentication authenticationToken =
+                new UsernamePasswordAuthenticationToken(
+                        user.email(),
+                        user.password()
+                );
+
+        // Autenticación mediante AuthenticationManager
+        Authentication authentication =
+                authenticationManager.authenticate(authenticationToken);
+
+        // Obtener usuario autenticado
+        User authenticatedUser = (User) authentication.getPrincipal();
+
+        // Generar JWT
+        String jwtToken = tokenService.generateToken(authenticatedUser);
+
+        return ResponseEntity.ok(new DataJWTToken(jwtToken));
     }
 
-    public record DataJWTToken(String jwToken){}
+    /**
+     * DTO de respuesta que contiene el token JWT.
+     */
+    public record DataJWTToken(String jwtToken) {
+    }
 }
